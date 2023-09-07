@@ -5,7 +5,11 @@ const bcrypt = require("bcrypt");
 
 exports.getUsers = async (req, res) => {
   try {
-    const dataUsers = await UserModel.findAll();
+    const dataUsers = await UserModel.findAll({
+      attributes: {
+        exclude: ["password", "createdAt", "updatedAt"],
+      },
+    });
 
     if (!dataUsers) {
       return res.status(400).send({
@@ -37,6 +41,7 @@ exports.addUser = async (req, res) => {
       email: joi.string().required().min(5).email(),
       username: joi.string().required().min(3),
       password: joi.string().required().min(5),
+      fullname: joi.string().required().min(3),
     });
     const validationError = validationInput.validate(dataInput).error;
     if (validationError) {
@@ -67,7 +72,7 @@ exports.addUser = async (req, res) => {
         username: dataInput.username,
       },
     });
-    if (dataUserByEmail) {
+    if (dataUserByUsername) {
       return res.status(400).send({
         status: "fail",
         message: `User with username: ${dataInput.username} Already Exist`,
@@ -80,6 +85,8 @@ exports.addUser = async (req, res) => {
       email: dataInput.email,
       username: dataInput.username,
       password: await bcrypt.hash(dataInput.password, 10),
+      fullname: dataInput.fullname,
+      level: "karyawan",
     });
 
     if (!insertToDatabase) {
