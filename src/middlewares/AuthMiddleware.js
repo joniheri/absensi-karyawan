@@ -44,3 +44,32 @@ exports.middleware = async (req, res, next) => {
     });
   }
 };
+
+exports.middlewareLevel = (levels) => {
+  return async (req, res, next) => {
+    const userDecode = req.user;
+
+    const userById = await UserModel.findOne({
+      where: {
+        id: userDecode.id,
+      },
+    });
+    if (!userById) {
+      return res.status(400).send({
+        status: "fail",
+        message: `User with ID: ${userDecode.id} Not Found`,
+      });
+    }
+
+    const userLevel = userById.level;
+
+    if (!levels.includes(userLevel)) {
+      return res.status(403).send({
+        status: "fail",
+        message: `Akses ditolak`,
+      });
+    }
+
+    return next();
+  };
+};

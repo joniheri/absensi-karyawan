@@ -97,13 +97,16 @@ exports.checkToken = async (req, res) => {
 
     return res.send({
       status: "success",
-      message: `Login Success`,
+      message: `Authorization Success`,
       userDecode,
       user: {
         id: dataUserById.id,
         email: dataUserById.email,
         username: dataUserById.username,
         fullname: dataUserById.fullname,
+        jabatan: dataUserById.jabatan,
+        noHp: dataUserById.noHp,
+        photo: dataUserById.photo,
       },
     });
   } catch (error) {

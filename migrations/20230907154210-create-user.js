@@ -20,6 +20,15 @@ module.exports = {
       fullname: {
         type: Sequelize.STRING,
       },
+      jabatan: {
+        type: Sequelize.STRING,
+      },
+      noHp: {
+        type: Sequelize.STRING,
+      },
+      photo: {
+        type: Sequelize.STRING,
+      },
       level: {
         type: Sequelize.STRING,
       },
