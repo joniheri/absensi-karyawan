@@ -119,12 +119,12 @@ exports.editProfile = async (req, res) => {
     const userDecode = req.user;
 
     // GetUserById
-    const userById = await UserModel.findOne({
+    const dataUserById = await UserModel.findOne({
       where: {
         id: userDecode.id,
       },
     });
-    if (!userById) {
+    if (!dataUserById) {
       return res.status(400).send({
         status: "fail",
         message: `User tidak ditemukan`,
@@ -134,11 +134,7 @@ exports.editProfile = async (req, res) => {
 
     // ValidationInput
     const validationInput = joi.object({
-      email: joi.string().required().min(5).email(),
-      username: joi.string().required().min(3),
-      password: joi.string().required().min(5),
       fullname: joi.string().required().min(3),
-      jabatan: joi.string().required().min(3),
       noHp: joi.string().required().min(11),
     });
     const validationError = validationInput.validate(dataInput).error;
@@ -150,10 +146,89 @@ exports.editProfile = async (req, res) => {
     }
     // End ValidationInput
 
+    // ProcessUpdate
+    const processUpdate = await UserModel.update(
+      {
+        fullname: dataInput.fullname,
+        noHp: dataInput.noHp,
+      },
+      {
+        where: {
+          id: dataUserById.id,
+        },
+      }
+    );
+    if (!processUpdate) {
+      return res.status(400).send({
+        status: "fail",
+        message: `Edit profile Fail`,
+      });
+    }
+    // End ProcessUpdate
+
     return res.send({
       status: "success",
       message: `Edit profile Success`,
-      user: userById,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send({
+      status: "fail",
+      message: `Error catch`,
+    });
+  }
+};
+
+exports.editPhotoProfile = async (req, res) => {
+  try {
+    const userDecode = req.user;
+
+    if (req.fileValidationError) {
+      return res.status(400).send({
+        status: "fail",
+        message: `${req.fileValidationError}`,
+      });
+    }
+
+    // GetUserById
+    const dataUserById = await UserModel.findOne({
+      where: {
+        id: userDecode.id,
+      },
+    });
+    // End GetUserById
+
+    // CheckNamePhotoAlreadyExist
+    if (req.file.originalname === dataUserById.photo) {
+      return res.status(400).send({
+        status: "fail",
+        message: `Photo dengan nama: ${req.file.originalname} ALREADY EXIST`,
+      });
+    }
+    // End CheckNamePhotoAlreadyExist
+
+    // Updateuser
+    const updateUser = await UserModel.update(
+      {
+        photo: req.file.originalname,
+      },
+      {
+        where: {
+          id: userDecode.id,
+        },
+      }
+    );
+    if (!updateUser) {
+      return res.status(400).send({
+        status: "fail",
+        message: `Edit photo profile Fail`,
+      });
+    }
+    // End updateUser
+
+    return res.send({
+      status: "success",
+      message: `Edit photo profile Success`,
     });
   } catch (error) {
     console.log(error);

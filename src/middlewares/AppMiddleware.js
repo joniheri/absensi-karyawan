@@ -25,4 +25,25 @@ const storage2 = multer.diskStorage({
   },
 });
 
-exports.upload = multer({ storage: storage2 });
+// Fungsi filter untuk mengizinkan hanya file gambar
+const imageFilter = function (req, file, cb) {
+  const fileSize = parseInt(req.headers["content-length"]);
+
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    req.fileValidationError = "Hanya file GAMBAR yang diizinkan";
+    cb(null, false);
+    return;
+  } else if (fileSize > 2 * 1024 * 1024) {
+    req.fileValidationError = "Ukuran file maximal 2mb";
+    cb(null, false);
+    return;
+  } else {
+    cb(null, true);
+    return;
+  }
+};
+
+exports.upload = multer({
+  storage: storage2,
+  fileFilter: imageFilter,
+});

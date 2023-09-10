@@ -8,6 +8,7 @@ const routes = require("./src/Routes");
 
 app.use(express.json());
 app.use(cors());
+app.use("/uploads", express.static("uploads"));
 app.use("/api", routes);
 
 app.get("/", (req, res) => {

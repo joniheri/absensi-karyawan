@@ -65,6 +65,11 @@ exports.login = async (req, res) => {
         id: dataUserByEmail.id,
         email: dataUserByEmail.email,
         username: dataUserByEmail.username,
+        fullname: dataUserByEmail.fullname,
+        jabatan: dataUserByEmail.jabatan,
+        noHp: dataUserByEmail.noHp,
+        photo: dataUserByEmail.photo,
+        level: dataUserByEmail.level,
       },
       token: token,
     });
@@ -98,7 +103,6 @@ exports.checkToken = async (req, res) => {
     return res.send({
       status: "success",
       message: `Authorization Success`,
-      userDecode,
       user: {
         id: dataUserById.id,
         email: dataUserById.email,
@@ -107,6 +111,7 @@ exports.checkToken = async (req, res) => {
         jabatan: dataUserById.jabatan,
         noHp: dataUserById.noHp,
         photo: dataUserById.photo,
+        level: dataUserById.level,
       },
     });
   } catch (error) {
