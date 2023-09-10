@@ -238,3 +238,67 @@ exports.editPhotoProfile = async (req, res) => {
     });
   }
 };
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userDecode = req.user;
+    const dataInput = req.body;
+
+    // ValidationInput
+    const validationInput = joi.object({
+      password: joi.string().required().min(5),
+    });
+    const validationError = validationInput.validate(dataInput).error;
+    if (validationError) {
+      return res.status(400).send({
+        status: "fail",
+        message: `${validationError.details[0].message}`,
+      });
+    }
+    // End ValidationInput
+
+    // GetUserById
+    const getUserById = await UserModel.findOne({
+      where: {
+        id: userDecode.id,
+      },
+    });
+    if (!getUserById) {
+      return res.status(400).send({
+        status: "fail",
+        message: `User not Found`,
+      });
+    }
+    // End GetUserById
+
+    // UpdatePassword
+    const updatePassword = await UserModel.update(
+      {
+        password: await bcrypt.hash(dataInput.password, 10),
+      },
+      {
+        where: {
+          id: userDecode.id,
+        },
+      }
+    );
+    if (!updatePassword) {
+      return res.status(400).send({
+        status: "fail",
+        message: `Change Password Fail`,
+      });
+    }
+    // End UpdatePassword
+
+    return res.send({
+      status: "success",
+      message: `Change Password Success`,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send({
+      status: "fail",
+      message: `Error catch`,
+    });
+  }
+};

@@ -17,11 +17,13 @@ const {
   getUsers,
   addUser,
   editProfile,
+  changePassword,
   editPhotoProfile,
 } = require("../src/controllers/UserController");
 router.get("/users", middleware, middlewareLevel(["admin"]), getUsers);
 router.post("/add-user", middleware, middlewareLevel(["admin"]), addUser);
 router.patch("/edit-profile", middleware, editProfile);
+router.patch("/change-password", middleware, changePassword);
 router.patch(
   "/edit-photo-profile",
   middleware,
