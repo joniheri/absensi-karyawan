@@ -45,7 +45,7 @@ const {
   takeAttendanceOut,
   getAttendanceConfig,
 } = require("../src/controllers/AttendanceController");
-router.get("/attendance-byuser", middleware, getAttendanceByUser);
+router.post("/attendance-byuser", middleware, getAttendanceByUser);
 router.get("/attendanceconfig", middleware, getAttendanceConfig);
 router.get("/take-attendance-in", middleware, takeAttendanceIn);
 router.get("/take-attendance-out", middleware, takeAttendanceOut);

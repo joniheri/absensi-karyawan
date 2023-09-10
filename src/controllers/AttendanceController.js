@@ -3,16 +3,22 @@ const {
   Attendanceconfig: AttendanceconfigModel,
 } = require("../../models");
 const joi = require("joi");
+const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 
 exports.getAttendanceByUser = async (req, res) => {
   try {
     const userDecode = req.user;
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
 
     // GetAttendanceByUserId
     const attendanceByUserid = await AttendanceModel.findAll({
       where: {
         userId: userDecode.id,
+        dateAttendance: {
+          [Op.between]: [startDate, endDate],
+        },
       },
       attributes: {
         exclude: ["createdAt", "updatedAt"],
@@ -23,7 +29,9 @@ exports.getAttendanceByUser = async (req, res) => {
     return res.send({
       status: "success",
       message: `Get user Success`,
-      attendanceByUserid,
+      data: attendanceByUserid,
+      startDate,
+      endDate,
     });
   } catch (error) {
     console.log(error);
