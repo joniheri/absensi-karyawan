@@ -38,4 +38,17 @@ router.post("/login", login);
 router.get("/check-token", middleware, checkToken);
 // End AuthController
 
+// Attendance
+const {
+  getAttendanceByUser,
+  takeAttendanceIn,
+  takeAttendanceOut,
+  getAttendanceConfig,
+} = require("../src/controllers/AttendanceController");
+router.get("/attendance-byuser", middleware, getAttendanceByUser);
+router.get("/attendanceconfig", middleware, getAttendanceConfig);
+router.get("/take-attendance-in", middleware, takeAttendanceIn);
+router.get("/take-attendance-out", middleware, takeAttendanceOut);
+// End Attendance
+
 module.exports = router;
