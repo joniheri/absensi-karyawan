@@ -44,11 +44,18 @@ const {
   takeAttendanceIn,
   takeAttendanceOut,
   getAttendanceConfig,
+  getAttendanceUserByEmail,
 } = require("../src/controllers/AttendanceController");
 router.post("/attendance-byuser", middleware, getAttendanceByUser);
 router.get("/attendanceconfig", middleware, getAttendanceConfig);
 router.get("/take-attendance-in", middleware, takeAttendanceIn);
 router.get("/take-attendance-out", middleware, takeAttendanceOut);
+router.get(
+  "/attendance-user-byemail/:userId",
+  middleware,
+  middlewareLevel(["admin"]),
+  getAttendanceUserByEmail
+);
 // End Attendance
 
 module.exports = router;

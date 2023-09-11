@@ -42,6 +42,44 @@ exports.getAttendanceByUser = async (req, res) => {
   }
 };
 
+exports.getAttendanceUserByEmail = async (req, res) => {
+  try {
+    const userDecode = req.user;
+    const userId = req.params.userId;
+    // const startDate = req.body.startDate;
+    // const endDate = req.body.endDate;
+
+    // GetAttendanceByUserId
+    const attendanceByUserById = await AttendanceModel.findAll({
+      where: {
+        userId: userId,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    if (!attendanceByUserById) {
+      return res.status(400).send({
+        status: "fail",
+        message: `Get Summary Absen User Not Found`,
+      });
+    }
+    // End GetAttendanceByUserId
+
+    return res.send({
+      status: "success",
+      message: `Get user Success`,
+      data: attendanceByUserById,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send({
+      status: "fail",
+      message: `Error catch`,
+    });
+  }
+};
+
 exports.getAttendanceConfig = async (req, res) => {
   try {
     const dataAttendanceConfig = await AttendanceconfigModel.findAll({
@@ -69,7 +107,9 @@ exports.takeAttendanceIn = async (req, res) => {
     const dataInput = req.body;
 
     const dateNow = new Date();
-    const tanggalSekarang = `${dateNow.getFullYear()}-${dateNow.getMonth()}-${dateNow.getDate()}`;
+    const tanggalSekarang = `${dateNow.getFullYear()}-${
+      dateNow.getMonth() + 1
+    }-${dateNow.getDate()}`;
     const jamSekarang = `${dateNow.getHours()}.${dateNow.getMinutes()}.${dateNow.getSeconds()}`;
 
     // CheckSudahAbsenMasuk
