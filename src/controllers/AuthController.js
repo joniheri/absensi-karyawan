@@ -1,4 +1,4 @@
-const { User: UserModel } = require("../../models");
+const { User: UserModel, Log: LogModel } = require("../../models");
 const joi = require("joi");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
@@ -57,6 +57,17 @@ exports.login = async (req, res) => {
       process.env.ACCESS_SECRET_KEY
     );
     // End MakeToken
+
+    const dateNow = new Date();
+    const jamSekarang = `${dateNow.getHours()}.${dateNow.getMinutes()}.${dateNow.getSeconds()}`;
+
+    // InsertToTableLog
+    await LogModel.create({
+      id: uuidv4(),
+      userId: dataUserByEmail.id,
+      timeLogin: jamSekarang,
+    });
+    // End InsertToTableLog
 
     return res.send({
       status: "success",
