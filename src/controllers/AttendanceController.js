@@ -104,7 +104,6 @@ exports.getAttendanceConfig = async (req, res) => {
 exports.takeAttendanceIn = async (req, res) => {
   try {
     const userDecode = req.user;
-    const dataInput = req.body;
 
     const dateNow = new Date();
     const tanggalSekarang = `${dateNow.getFullYear()}-${
@@ -160,10 +159,11 @@ exports.takeAttendanceIn = async (req, res) => {
 exports.takeAttendanceOut = async (req, res) => {
   try {
     const userDecode = req.user;
-    const dataInput = req.body;
 
     const dateNow = new Date();
-    const tanggalSekarang = `${dateNow.getFullYear()}-${dateNow.getMonth()}-${dateNow.getDate()}`;
+    const tanggalSekarang = `${dateNow.getFullYear()}-${
+      dateNow.getMonth() + 1
+    }-${dateNow.getDate()}`;
     const jamSekarang = `${dateNow.getHours()}.${dateNow.getMinutes()}.${dateNow.getSeconds()}`;
 
     // CheckSudahAbsenMasuk
