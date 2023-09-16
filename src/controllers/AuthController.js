@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 exports.login = async (req, res) => {
   try {
     const dataInput = req.body;
+    const dateNow = new Date();
+    const jamSekarang = `${dateNow.getHours()}.${dateNow.getMinutes()}.${dateNow.getSeconds()}`;
 
     // ValidationInput
     const validationInput = joi.object({
@@ -57,9 +59,6 @@ exports.login = async (req, res) => {
       process.env.ACCESS_SECRET_KEY
     );
     // End MakeToken
-
-    const dateNow = new Date();
-    const jamSekarang = `${dateNow.getHours()}.${dateNow.getMinutes()}.${dateNow.getSeconds()}`;
 
     // InsertToTableLog
     await LogModel.create({
